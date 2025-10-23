@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import '../App.css';
 
 function ListOfRecords() {
 
@@ -9,28 +9,33 @@ function ListOfRecords() {
   useEffect(() => {
     axios.get("http://localhost:3001/records").then((response) => {
       setListOfRecords(response.data);
-    })
+    });
   }, []);
 
   return (
-    <div>
-      
+    <div className="records-container">
       <h2>List of Records</h2>
 
-      {listOfRecords.map((value, key) => {
-            return <div>
+      <div className="records-grid">
+        {listOfRecords.map((record) => (
+          <div className="record-card" key={record.id}>
+            <img 
+              src={record.cover} 
+              alt={record.title}
+              className="record-cover"
+            />
 
-              <div> {value.title} </div>
-              <div> {value.artist} </div>
-              <div> {value.year} </div>
-              <div> {value.genre} </div>
+            <h3 className="record-title">
+              {record.title} <span>({record.year})</span>
+            </h3>
 
-            </div>
-      })}
-
+            <p className="record-artist">{record.artist}</p>
+            <p className="record-genre">{record.genre}</p>
+          </div>
+        ))}
+      </div>
     </div>
-    
-  )
+  );
 }
 
 export default ListOfRecords;
