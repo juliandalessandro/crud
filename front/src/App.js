@@ -1,38 +1,20 @@
 import './App.css';
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import ListOfRecords from "./pages/ListOfRecords";
+import UploadRecord from "./pages/UploadRecord";
 
 function App() {
-
-  const [listOfRecords, setListOfRecords] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:3001/records").then((response) => {
-      setListOfRecords(response.data);
-    })
-  }, []);
 
   return (
     <Router>
       <div className="App"> 
       
         <Navbar />
-        
-        {listOfRecords.map((value, key) => {
-          return <div>
-
-            <div> {value.title} </div>
-            <div> {value.artist} </div>
-            <div> {value.year} </div>
-            <div> {value.genre} </div>
-
-          </div>
-        })}
 
         <Routes>
-          <Route path="/" />
+          <Route path="/" element={<ListOfRecords />}/>
+          <Route path="/uploadRecord" element={<UploadRecord />}/>
         </Routes>
       </div>
     </Router>
