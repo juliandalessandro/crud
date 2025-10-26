@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import '../App.css';
 
 function ListOfRecords() {
+
+  const location = useLocation();
 
   const [listOfRecords, setListOfRecords] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,12 +25,26 @@ function ListOfRecords() {
   });
   const [editMessage, setEditMessage] = useState("");
 
+  // Toast de upload
+  const [uploadMessage, setUploadMessage] = useState("");
+
+  // ====== Obtener records ======
   useEffect(() => {
     axios.get("http://localhost:3001/records").then((response) => {
       setListOfRecords(response.data);
     });
   }, []);
 
+  // ====== Toast de upload desde redirección ======
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      setUploadMessage(location.state.toastMessage);
+      const timer = setTimeout(() => setUploadMessage(""), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
+
+  // ====== Esc para cerrar modales ======
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -73,7 +90,7 @@ function ListOfRecords() {
   // ================== EDIT ==================
   const handleEdit = (record) => {
     setRecordToEdit(record);
-    setEditRecord({ ...record }); // precarga los datos en el form
+    setEditRecord({ ...record });
     setShowEditModal(true);
     document.body.classList.add("modal-open");
   };
@@ -84,7 +101,7 @@ function ListOfRecords() {
       setShowEditModal(false);
       setIsClosing(false);
       document.body.classList.remove("modal-open");
-    }, 200); // duración del fadeOut
+    }, 200);
   };
 
   const handleSubmitEdit = async (e) => {
@@ -92,8 +109,7 @@ function ListOfRecords() {
     if (!recordToEdit) return;
 
     try {
-      // Cierra modal inmediatamente con fade
-      handleCloseEdit();
+      handleCloseEdit(); // cierra modal rápido con fade
 
       await axios.put(`http://localhost:3001/records/${recordToEdit.id}`, editRecord);
 
@@ -101,7 +117,6 @@ function ListOfRecords() {
         prev.map(r => r.id === recordToEdit.id ? editRecord : r)
       );
 
-      // Mostrar toast azul
       setEditMessage("Record updated");
       setTimeout(() => setEditMessage(""), 2500);
 
@@ -215,8 +230,10 @@ function ListOfRecords() {
         </div>
       )}
 
-      {editMessage && <div className="toast-message-edit">{editMessage}</div>}
+      {/* Toasts */}
+      {editMessage && <div className="toast-message-edit-upload">{editMessage}</div>}
       {deleteMessage && <div className="toast-message">{deleteMessage}</div>}
+      {uploadMessage && <div className="toast-message-edit-upload">{uploadMessage}</div>}
     </div>
   );
 }

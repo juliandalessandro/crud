@@ -291,7 +291,7 @@ body.modal-open {
 }
 
 /* Edit toast (azul) */
-.toast-message-edit {
+.toast-message-edit-upload {
   position: fixed;
   bottom: 30px;
   right: 30px;

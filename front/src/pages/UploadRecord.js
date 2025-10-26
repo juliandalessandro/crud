@@ -1,99 +1,97 @@
 import axios from "axios";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import '../App.css';
 
 function UploadRecord() {
 
-    const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-    const [record, setRecord] = useState({
-        title: "",
-        artist: "",
-        year: "",
-        genre: ""
-    });
+  const [record, setRecord] = useState({
+    title: "",
+    artist: "",
+    year: "",
+    genre: "",
+    cover: ""
+  });
 
-    const handleChange = (e) => {
-        setRecord({ ...record, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setRecord({ ...record, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        axios.post("http://localhost:3001/records", record)
-            .then(() => {
-            setMessage("✅ Registro creado con éxito!");
-            setRecord({ title: "", artist: "", year: "", genre: "", cover: "" });
-            })
-            .catch((err) => {
-            console.error(err);
-            setMessage("❌ Error al crear el registro");
-            });
-    };
+    try {
+      await axios.post("http://localhost:3001/records", record);
 
+      // Limpiar form
+      setRecord({ title: "", artist: "", year: "", genre: "", cover: "" });
 
-    return (
-        <div className="form-container">
-            <h2>Upload Record</h2>
+      // Redirigir al home y pasar mensaje como estado
+      navigate("/", { state: { toastMessage: "Record uploaded successfully" } });
 
-            <form onSubmit={handleSubmit}>
-            <input
-                className="form-input"
-                type="text"
-                name="title"
-                placeholder="Title"
-                value={record.title}
-                onChange={handleChange}
-                required
-            />
-            <input
-                className="form-input"
-                type="text"
-                name="artist"
-                placeholder="Artist"
-                value={record.artist}
-                onChange={handleChange}
-                required
-            />
-            <input
-                className="form-input"
-                type="number"
-                name="year"
-                placeholder="Year"
-                value={record.year}
-                onChange={handleChange}
-                required
-            />
-            <input
-                className="form-input"
-                type="text"
-                name="genre"
-                placeholder="Genre"
-                value={record.genre}
-                onChange={handleChange}
-                required
-            />
-            <input
-                className="form-input"
-                type="text"
-                name="cover"
-                placeholder="Cover"
-                value={record.cover}
-                onChange={handleChange}
-                required
-            />
+    } catch (err) {
+      console.error(err);
+      alert("Error uploading record"); // puedes reemplazar por toast de error si querés
+    }
+  };
 
-            <button className="btn-upload" type="submit">Upload</button>
-            </form>
+  return (
+    <div className="form-container">
+      <h2>Upload Record</h2>
 
-            {message && (
-            <p className={message.includes("✅") ? "message-success" : "message-error"}>
-                {message}
-            </p>
-            )}
-        </div>
-    );
+      <form onSubmit={handleSubmit}>
+        <input
+          className="form-input"
+          type="text"
+          name="title"
+          placeholder="Title"
+          value={record.title}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          type="text"
+          name="artist"
+          placeholder="Artist"
+          value={record.artist}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          type="number"
+          name="year"
+          placeholder="Year"
+          value={record.year}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          type="text"
+          name="genre"
+          placeholder="Genre"
+          value={record.genre}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-input"
+          type="text"
+          name="cover"
+          placeholder="Cover"
+          value={record.cover}
+          onChange={handleChange}
+          required
+        />
 
+        <button className="btn-upload" type="submit">Upload</button>
+      </form>
+    </div>
+  );
 }
 
 export default UploadRecord;
