@@ -8,6 +8,7 @@ import '../App.css';
 //COMPONENTS imports
 import EditRecordModal from "../components/EditRecordModal";
 import DeleteRecordModal from "../components/DeleteRecordModal";
+import SearchRecordField from "../components/SearchRecordField";
 
 function ListOfRecords() {
   
@@ -222,17 +223,10 @@ function ListOfRecords() {
   return (
     <div className="records-container">
       {/* SEARCH FIELD */}
-      <div style={{ maxWidth: 700, margin: '0 auto 16px', display: 'flex', gap: 8 }}>
-        <input
-          type="search"
-          placeholder="Search by title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="form-input"
-          style={{ flex: 1 }}
-        />
-        {/* En el futuro: botones/selects para filtros por artista/género/año */}
-      </div>
+      <SearchRecordField
+        search={search}
+        setSearch={setSearch}
+      />
 
       <h2>List of Records</h2>
 
