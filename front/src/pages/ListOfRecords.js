@@ -9,6 +9,7 @@ import '../App.css';
 import EditRecordModal from "../components/EditRecordModal";
 import DeleteRecordModal from "../components/DeleteRecordModal";
 import SearchRecordField from "../components/SearchRecordField";
+import RecordCard from "../components/RecordCard";
 
 function ListOfRecords() {
   
@@ -232,25 +233,12 @@ function ListOfRecords() {
 
       <div className="records-grid">
         {filteredRecords.map((record) => (
-          <div className="record-card" key={record.id}>
-            <img
-              src={record.cover}
-              alt={record.title}
-              className="record-cover"
-            />
-
-            <h3 className="record-title">
-              {record.title} <span>({record.year})</span>
-            </h3>
-
-            <p className="record-artist">{record.artist}</p>
-            <p className="record-genre">{record.genre}</p>
-
-            <div className="card-actions">
-              <button className="btn-edit" onClick={() => handleEdit(record)}>✏️</button>
-              <button className="btn-delete" onClick={() => handleDelete(record)}>🗑️</button>
-            </div>
-          </div>
+          <RecordCard
+            key={record.id}
+            record={record}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
 
