@@ -13,6 +13,7 @@ import EditRecordModal from "../components/EditRecordModal";
 import DeleteRecordModal from "../components/DeleteRecordModal";
 import SearchRecordField from "../components/SearchRecordField";
 import RecordCard from "../components/RecordCard";
+import Spinner from "../components/Spinner";
 
 function ListOfRecords() {
   const location = useLocation();
@@ -195,7 +196,7 @@ function ListOfRecords() {
       <div className="records-container">
         <h2>List of Records</h2>
         <div className="loading-overlay">
-          <div className="loading-spinner"></div>
+          <Spinner />
           <span className="loading-text">Loading records...</span>
         </div>
       </div>

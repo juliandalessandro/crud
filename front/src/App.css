@@ -50,6 +50,17 @@ body.modal-open {
   transform: translateY(-2px);
 }
 
+/* ========= SPINNER ========= */
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 3px solid rgba(0,0,0,0.08);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ========= RECORD CARDS ========= */
 .records-container {
   padding: 20px;
@@ -174,16 +185,6 @@ body.modal-open {
 
 .error-message::before {
   content: "⚠️";
-}
-
-.loading-spinner {
-  width: 22px;
-  height: 22px;
-  border: 3px solid #bbb;
-  border-top-color: #222;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-right: 10px;
 }
 
 @keyframes spin {
