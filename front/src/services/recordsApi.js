@@ -7,6 +7,18 @@ export async function getRecords() {
   return response.json();
 }
 
+// UPLOAD record
+export async function createRecord(data) {
+  const response = await fetch(BASE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) throw new Error("Failed to create record");
+  return response.json();
+}
+
 // UPDATE record
 export async function updateRecord(id, data) {
   const response = await fetch(`${BASE_URL}/${id}`, {

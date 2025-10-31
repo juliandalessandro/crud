@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../App.css';
+import { createRecord } from "../services/recordsApi"; 
+import "../App.css";
 
 function UploadRecord() {
 
@@ -15,21 +15,23 @@ function UploadRecord() {
     cover: ""
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     setRecord({ ...record, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      await axios.post("http://localhost:3001/records", record);
+      await createRecord(record);
 
-      // Limpiar form
       setRecord({ title: "", artist: "", year: "", genre: "", cover: "" });
 
-      // Redirigir al home y pasar mensaje como estado
-      // 'replace: true' evita que el toast reaparezca al refrescar la página
       navigate("/", { 
         state: { toastMessage: "Record uploaded successfully" }, 
         replace: true 
@@ -37,7 +39,9 @@ function UploadRecord() {
 
     } catch (err) {
       console.error(err);
-      alert("Error uploading record"); // puedes reemplazar por toast de error si querés
+      setError("Error uploading record");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,54 +49,18 @@ function UploadRecord() {
     <div className="form-container">
       <h2>Upload Record</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          className="form-input"
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={record.title}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="form-input"
-          type="text"
-          name="artist"
-          placeholder="Artist"
-          value={record.artist}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="form-input"
-          type="number"
-          name="year"
-          placeholder="Year"
-          value={record.year}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="form-input"
-          type="text"
-          name="genre"
-          placeholder="Genre"
-          value={record.genre}
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="form-input"
-          type="text"
-          name="cover"
-          placeholder="Cover"
-          value={record.cover}
-          onChange={handleChange}
-          required
-        />
+      {error && <p className="error-message">{error}</p>}
 
-        <button className="btn-upload" type="submit">Upload</button>
+      <form onSubmit={handleSubmit}>
+        <input className="form-input" type="text" name="title" placeholder="Title" value={record.title} onChange={handleChange} required />
+        <input className="form-input" type="text" name="artist" placeholder="Artist" value={record.artist} onChange={handleChange} required />
+        <input className="form-input" type="number" name="year" placeholder="Year" value={record.year} onChange={handleChange} required />
+        <input className="form-input" type="text" name="genre" placeholder="Genre" value={record.genre} onChange={handleChange} required />
+        <input className="form-input" type="text" name="cover" placeholder="Cover URL" value={record.cover} onChange={handleChange} required />
+
+        <button className="btn-upload" type="submit" disabled={loading}>
+          {loading ? "Uploading..." : "Upload"}
+        </button>
       </form>
     </div>
   );
