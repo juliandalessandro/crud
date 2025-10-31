@@ -14,6 +14,7 @@ import DeleteRecordModal from "../components/DeleteRecordModal";
 import SearchRecordField from "../components/SearchRecordField";
 import RecordCard from "../components/RecordCard";
 import Spinner from "../components/Spinner";
+import Toast from "../components/Toast";
 
 function ListOfRecords() {
   const location = useLocation();
@@ -266,9 +267,9 @@ function ListOfRecords() {
       )}
 
       {/* Toasts */}
-      {editMessage && <div className="toast-message-edit-upload">{editMessage}</div>}
-      {deleteMessage && <div className="toast-message">{deleteMessage}</div>}
-      {uploadMessage && <div className="toast-message-edit-upload">{uploadMessage}</div>}
+      <Toast message={editMessage} type="success" />
+      <Toast message={deleteMessage} type="error" />
+      <Toast message={uploadMessage} type="success" />
     </div>
   );
 }

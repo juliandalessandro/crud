@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRecord } from "../services/recordsApi"; 
 import "../App.css";
+// COMPONENTS imports
+import Toast from "../components/Toast";
 
 function UploadRecord() {
 
@@ -49,7 +51,7 @@ function UploadRecord() {
     <div className="form-container">
       <h2>Upload Record</h2>
 
-      {error && <p className="error-message">{error}</p>}
+      <Toast message={error} type="error" />
 
       <form onSubmit={handleSubmit}>
         <input className="form-input" type="text" name="title" placeholder="Title" value={record.title} onChange={handleChange} required />
