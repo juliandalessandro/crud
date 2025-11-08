@@ -38,7 +38,16 @@ api.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
+    const isAuthMe = originalRequest.url.includes("/auth/me");
+    const isRefresh = originalRequest.url.includes("/auth/refresh");
+
+    // ❌ NO interceptar /me ni /refresh en la restauración de sesión
+    if (isAuthMe || isRefresh) {
+      return Promise.reject(err);
+    }
+
     if (err.response?.status === 401 && !originalRequest._retry) {
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -58,7 +67,9 @@ api.interceptors.response.use(
       } catch (refreshErr) {
         isRefreshing = false;
         processQueue(refreshErr);
-        window.location.href = "/login";
+
+        // ❌ NO redirigir automáticamente
+        // Dejá que AuthContext limpie la sesión
         return Promise.reject(refreshErr);
       }
     }
@@ -66,5 +77,6 @@ api.interceptors.response.use(
     return Promise.reject(err);
   }
 );
+
 
 export default api;
